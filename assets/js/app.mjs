@@ -19,6 +19,10 @@ if (root) {
   let hintLevel = 0;
   let helpReturnFocus = null;
 
+  function track(name, parameters = {}) {
+    window.leverageAnalytics?.track(name, parameters);
+  }
+
   const elements = {
     scenarioPicker: root.querySelector("[data-scenario-picker]"),
     scenarioPrompt: root.querySelector("[data-scenario-prompt]"),
@@ -58,7 +62,10 @@ if (root) {
     `).join("");
 
     elements.scenarioPicker.querySelectorAll("[data-scenario]").forEach((button) => {
-      button.addEventListener("click", () => resetScenario(button.dataset.scenario));
+      button.addEventListener("click", () => {
+        track("scenario_selected", { scenario_id: button.dataset.scenario });
+        resetScenario(button.dataset.scenario);
+      });
     });
   }
 
@@ -142,6 +149,7 @@ if (root) {
   }
 
   function openHelp() {
+    track("help_opened", { scenario_id: state.scenarioId, cycle: state.cycle });
     helpReturnFocus = document.activeElement;
     elements.helpLayer.hidden = false;
     document.body.classList.add("drawer-open");
@@ -442,13 +450,29 @@ if (root) {
       return;
     }
 
+    const scenarioId = state.scenarioId;
     const result = runCycle(state, [...selected], prediction);
+    track("cycle_run", {
+      scenario_id: scenarioId,
+      cycle: result.receipt.cycle,
+      investment_ids: result.receipt.selectedIds.join(",") || "none",
+      prediction: result.receipt.prediction,
+      modeled_constraint: result.receipt.actual,
+      prediction_correct: result.receipt.predictionCorrect,
+      accepted_per_week: Number(result.receipt.metric.outcomesPerWeek.toFixed(1))
+    });
     state = result.state;
     selected = new Set();
     prediction = "";
     hintLevel = 0;
     clearNotice();
     render();
+    if (state.cycle === state.maxCycles) {
+      track("simulation_completed", {
+        scenario_id: state.scenarioId,
+        accepted_per_week: Number(result.receipt.metric.outcomesPerWeek.toFixed(1))
+      });
+    }
     elements.receipt.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
@@ -482,6 +506,11 @@ if (root) {
   elements.helpDrawer.addEventListener("keydown", trapHelpFocus);
   elements.hintButton.addEventListener("click", () => {
     hintLevel = Math.min(3, hintLevel + 1);
+    track("hint_requested", {
+      scenario_id: state.scenarioId,
+      cycle: state.cycle,
+      hint_level: hintLevel
+    });
     renderHint();
   });
   render();

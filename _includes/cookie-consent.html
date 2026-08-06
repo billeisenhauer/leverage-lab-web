@@ -1,0 +1,28 @@
+<aside
+  class="cookie-consent"
+  data-cookie-consent
+  role="region"
+  aria-labelledby="cookie-consent-title"
+  hidden
+>
+  <div class="cookie-consent__copy">
+    <p class="cookie-consent__eyebrow">Your choice</p>
+    <h2 id="cookie-consent-title" tabindex="-1">Optional analytics</h2>
+    <p>
+      Leverage Lab uses Google Analytics cookies to understand which scenarios and learning tools are useful.
+      Nothing is sent to Google unless you choose Accept.
+      <a href="{{ '/cookies/' | relative_url }}">Read the cookie policy</a>.
+    </p>
+  </div>
+  <div class="cookie-consent__actions">
+    <button class="button cookie-consent__accept" type="button" data-cookie-accept>Accept</button>
+    <button class="button cookie-consent__decline" type="button" data-cookie-decline>Decline</button>
+  </div>
+</aside>
+
+<script>
+  window.leverageAnalyticsConfig = {
+    measurementId: {% if jekyll.environment == "production" %}{{ site.google_analytics | default: "" | jsonify }}{% else %}""{% endif %}
+  };
+</script>
+<script type="module" src="{{ '/assets/js/analytics.mjs' | relative_url }}"></script>
