@@ -1,0 +1,38 @@
+#!/bin/bash
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+cd "$PROJECT_DIR"
+
+echo "Leverage Lab — DX setup"
+echo ""
+
+if [ -f ".env" ]; then
+    echo ".env already exists. Keeping the current DX configuration."
+    exit 0
+fi
+
+read -p "Site name [leverage-lab]: " site_name
+site_name=${site_name:-leverage-lab}
+
+read -p "Development port [4077]: " port
+port=${port:-4077}
+
+livereload_port=$((port + 35729 - 4000))
+read -p "LiveReload port [$livereload_port]: " lr_port
+livereload_port=${lr_port:-$livereload_port}
+
+cat > .env << EOF
+SITE_NAME=$site_name
+PORT=$port
+LIVERELOAD_PORT=$livereload_port
+EOF
+
+cat > _config.dev.yml << EOF
+url: "http://localhost:$port"
+baseurl: ""
+EOF
+
+echo "Configured $site_name at http://localhost:$port"

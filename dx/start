@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+cd "$PROJECT_DIR"
+
+if [ ! -f ".env" ]; then
+    "$SCRIPT_DIR/init"
+    "$SCRIPT_DIR/build"
+fi
+
+source .env
+
+echo "Starting $SITE_NAME..."
+docker compose -f docker-compose.dev.yml up -d
+echo "$SITE_NAME is running at http://localhost:$PORT"

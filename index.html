@@ -1,0 +1,207 @@
+---
+layout: default
+title: "Leverage Lab — Human-Agent Delivery Simulator"
+description: "A five-minute simulation of constraint movement in human-agent software delivery systems."
+---
+
+<section class="hero">
+  <div class="hero__copy">
+    <p class="eyebrow">An interactive operating hypothesis</p>
+    <h1>More builders.<br><em>Same throughput.</em></h1>
+    <p class="hero__lede">When software creation becomes cheap and parallel, another part of the system becomes the constraint. Can you find it before your intervention makes the system worse?</p>
+    <div class="hero__actions">
+      <a class="button button--primary" href="#lab">Enter the lab</a>
+      <a class="text-link" href="{{ '/methodology/' | relative_url }}">Inspect the model <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+  <aside class="hero__instrument" aria-label="Opening system signal">
+    <div class="instrument__header">
+      <span>System signal</span>
+      <span class="live-dot">illustrative</span>
+    </div>
+    <p class="instrument__number">+92%</p>
+    <p class="instrument__label">build capacity</p>
+    <div class="instrument__rule"></div>
+    <p class="instrument__number instrument__number--flat">+0%</p>
+    <p class="instrument__label">accepted outcomes</p>
+    <p class="instrument__question">Where did the constraint move?</p>
+  </aside>
+  <div class="hero__disclaimer">
+    <span>01</span>
+    <p>This is a deterministic learning model built from public methods—not a forecast, benchmark, or diagnosis of any company.</p>
+  </div>
+</section>
+
+<section class="lab-shell" id="lab" data-simulator>
+  <header class="lab-header">
+    <div>
+      <p class="eyebrow eyebrow--light">The control room</p>
+      <h2>Run four six-week learning cycles.</h2>
+      <p>Inspect noisy evidence, spend ten Leverage points, predict the constraint, and collect a learning receipt.</p>
+    </div>
+    <div class="lab-header__actions">
+      <button class="help-button" type="button" data-help-open aria-haspopup="dialog">
+        <span aria-hidden="true">?</span> How to play
+      </button>
+      <button class="quiet-button" type="button" data-reset>Reset scenario</button>
+    </div>
+  </header>
+
+  <div class="scenario-picker" data-scenario-picker aria-label="Choose a scenario"></div>
+
+  <div class="lab-console">
+    <div class="console-strip">
+      <div><span>Cycle</span><strong data-cycle>0 / 4</strong></div>
+      <div><span>Points remaining</span><strong data-budget>10 / 10</strong></div>
+      <div><span>Scenario seed</span><strong data-seed>4217</strong></div>
+      <p data-scenario-prompt>Build capacity nearly doubled. Accepted outcomes did not.</p>
+    </div>
+
+    <section class="diagnosis-panel" aria-labelledby="diagnosis-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">01 · Observe</p>
+          <h3 id="diagnosis-title">Read the available signal</h3>
+        </div>
+        <p>Telemetry is incomplete. The loudest queue may not govern whole-system throughput.</p>
+      </div>
+      <div class="diagnosis-readout" data-diagnosis aria-live="polite"></div>
+      <div class="hint-controls">
+        <button class="hint-button" type="button" data-hint-button>
+          <span aria-hidden="true">↳</span> Give me a hint
+        </button>
+        <div class="hint-card" data-hint-panel hidden aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="pipeline-panel" aria-labelledby="pipeline-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">02 · Locate</p>
+          <h3 id="pipeline-title">The outcome pipeline</h3>
+        </div>
+        <div class="legend">
+          <span><i class="legend-signal"></i> telemetry signal</span>
+          <span><i class="legend-constraint"></i> revealed constraint</span>
+        </div>
+      </div>
+      <ol class="pipeline" data-pipeline></ol>
+      <dl class="metric-grid" data-metrics></dl>
+    </section>
+
+    <section class="investment-panel" aria-labelledby="investment-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">03 · Intervene</p>
+          <h3 id="investment-title">Spend at the constraint—or test your theory</h3>
+        </div>
+        <p>Every intervention has a mechanism, delay, and side effect. Select up to ten points.</p>
+      </div>
+      <div class="investment-grid" data-investments></div>
+    </section>
+
+    <section class="prediction-panel" aria-labelledby="prediction-title">
+      <div>
+        <p class="section-kicker">04 · Predict</p>
+        <h3 id="prediction-title">After this allocation, what will govern throughput?</h3>
+      </div>
+      <div class="prediction-chips" data-prediction></div>
+      <p class="form-notice" data-notice hidden role="alert"></p>
+      <button class="button button--run" type="button" data-run-cycle>Run cycle 1</button>
+    </section>
+
+    <section class="receipt" data-receipt hidden aria-live="polite"></section>
+
+    <section class="history-panel" aria-labelledby="history-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">05 · Learn</p>
+          <h3 id="history-title">Accepted-outcome history</h3>
+        </div>
+        <p>Local output is omitted. Only work accepted into use and ownership counts.</p>
+      </div>
+      <div class="history-chart" data-history></div>
+    </section>
+
+    <section class="debrief" data-debrief hidden></section>
+  </div>
+
+  <div class="drawer-layer" data-help-layer hidden>
+    <button class="drawer-scrim" type="button" data-help-close aria-label="Close how-to-play guide"></button>
+    <aside
+      class="help-drawer"
+      data-help-drawer
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="help-title"
+      tabindex="-1"
+    >
+      <header class="help-drawer__header">
+        <div>
+          <p class="eyebrow">Field guide · 90 seconds</p>
+          <h2 id="help-title">How to play</h2>
+        </div>
+        <button class="drawer-close" type="button" data-help-close aria-label="Close how-to-play guide">×</button>
+      </header>
+
+      <p class="help-drawer__goal"><strong>Your goal:</strong> increase accepted and owned outcomes without flooding the system with WIP, rework, or demands on scarce human attention.</p>
+
+      <ol class="play-steps">
+        <li>
+          <span>1</span>
+          <div><strong>Read the signal</strong><p>The highlighted telemetry is an estimate—not model truth. Check queues, effective capacity, and coverage.</p></div>
+        </li>
+        <li>
+          <span>2</span>
+          <div><strong>Spend up to 10 points</strong><p>Choose interventions for their mechanism. You do not have to spend every point.</p></div>
+        </li>
+        <li>
+          <span>3</span>
+          <div><strong>Make a prediction</strong><p>Choose the stage you believe will govern throughput after your allocation takes effect.</p></div>
+        </li>
+        <li>
+          <span>4</span>
+          <div><strong>Run six weeks</strong><p>Your receipt reveals model truth, accepted outcomes, and whether the constraint moved.</p></div>
+        </li>
+        <li>
+          <span>5</span>
+          <div><strong>Diagnose again</strong><p>Use each receipt as evidence. A successful intervention can make the previous playbook obsolete.</p></div>
+        </li>
+      </ol>
+
+      <div class="help-drawer__tip">
+        <span>Reading tip</span>
+        <p>The largest queue is not automatically the constraint. Start by comparing each stage’s effective capacity: sustainable capacity × first-pass yield.</p>
+      </div>
+
+      <button class="button button--primary drawer-start" type="button" data-help-close>Start cycle 1</button>
+    </aside>
+  </div>
+</section>
+
+<section class="argument-section">
+  <div class="argument-section__intro">
+    <p class="eyebrow">The argument behind the model</p>
+    <h2>Leverage is not a thing a platform team ships.</h2>
+  </div>
+  <div class="argument-grid">
+    <article>
+      <span>01</span>
+      <h3>Output is not outcome.</h3>
+      <p>Code, tooling, foundations, and partner deliverables become leverage only after another team adopts them and an owner can sustain them.</p>
+    </article>
+    <article>
+      <span>02</span>
+      <h3>Human attention is capacity.</h3>
+      <p>Agents can make implementation abundant while shaping, evaluation, review, security, and ownership remain scarce.</p>
+    </article>
+    <article>
+      <span>03</span>
+      <h3>The constraint will move.</h3>
+      <p>A successful intervention invalidates yesterday’s operating assumption. The enduring capability is learning faster than the system changes.</p>
+    </article>
+  </div>
+  <a class="text-link text-link--large" href="{{ '/methodology/' | relative_url }}">Read the equations, assumptions, and limits <span aria-hidden="true">→</span></a>
+</section>
+
+<script type="module" src="{{ '/assets/js/app.mjs' | relative_url }}"></script>

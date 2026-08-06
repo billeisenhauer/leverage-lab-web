@@ -1,0 +1,38 @@
+title: "Leverage Lab"
+tagline: "A constraint simulator for human-agent delivery systems"
+description: >-
+  Explore why more software-building capacity does not necessarily create more
+  accepted outcomes—and what changes when the constraint moves.
+author:
+  name: "Bill Eisenhauer"
+url: "https://billeisenhauer.github.io"
+baseurl: "/leverage-lab-web"
+
+markdown: kramdown
+permalink: pretty
+theme: null
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "page"
+      image: "/assets/images/og.png"
+
+exclude:
+  - Dockerfile.dev
+  - docker-compose.dev.yml
+  - dx
+  - tests
+  - vendor
+  - README.md
+  - DX_PROTOCOL.md
+  - Gemfile.lock
+  - .env
+  - .env.example
+  - .github
