@@ -21,6 +21,7 @@ The simulator sends a small set of interaction events:
 
 - opening the how-to-play guide;
 - requesting a hint, including the hint level and current scenario;
+- changing between Easy and Hard guidance modes;
 - selecting a scenario;
 - running a cycle, including the scenario, selected intervention IDs, prediction, modeled constraint, prediction result, and accepted-outcome rate; and
 - completing a four-cycle simulation.

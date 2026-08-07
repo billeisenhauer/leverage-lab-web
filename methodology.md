@@ -54,6 +54,18 @@ foundation net capacity
 
 Instrumentation consumes Leverage points but adds no physical stage capacity. Its modeled value is increasing diagnosis confidence before the next intervention.
 
+## Easy and Hard modes
+
+Hard mode presents the available evidence and withholds modeled intervention impact until the learning receipt. Easy mode runs a private comparison for every affordable card using the same deterministic next cycle:
+
+```text
+marginal effect = result(current selections + candidate) − result(current selections)
+```
+
+For an already-selected card, the comparison is the current bundle versus that bundle without the card. This means guidance is contextual: a card can change from helpful to harmful after another intervention is selected. Accepted outcomes are the primary signal. When throughput is flat, the guide considers WIP, human attention, and telemetry coverage, distinguishing immediate help, harm, learning value, and a neutral result.
+
+Easy mode is a teaching aid, not an optimizer. It reveals what this model believes about the next cycle; it does not establish that the same intervention would help a real organization.
+
 ## What is intentionally absent
 
 The simulator does not contain company data, financial forecasts, team-performance benchmarks, story points, lines of code, prompt counts, AI-seat utilization, or claims about a specific organization’s constraint.
@@ -71,3 +83,5 @@ A useful model should expose what would change its author’s mind. Leverage Lab
 - constraints remained stable enough that periodic re-diagnosis had no value.
 
 The source is intentionally small and inspectable. Change a capacity, yield, coverage level, or intervention effect and rerun the same seed.
+
+The [project wiki](https://github.com/billeisenhauer/leverage-lab-web/wiki) extends these notes with a facilitator guide, reusable learning loop, and a generic human-agent delivery-system hypothesis.

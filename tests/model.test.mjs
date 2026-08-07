@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   createScenario,
   diagnose,
+  evaluateInvestmentImpact,
   investmentCost,
   runCycle
 } from "../assets/js/model.mjs";
@@ -48,4 +49,36 @@ test("investment costs are explicit and additive", () => {
     () => runCycle(createScenario(), ["verification", "foundation", "observe"], "verify"),
     /exceeds/
   );
+});
+
+test("easy guidance changes when the current intervention bundle changes", () => {
+  const state = createScenario("agent-wave");
+  const standalone = evaluateInvestmentImpact(state, [], "full-kit");
+  const combined = evaluateInvestmentImpact(state, ["verification"], "full-kit");
+
+  assert.equal(standalone.basis, "addition");
+  assert.equal(combined.basis, "addition");
+  assert.equal(standalone.classification, "harmful");
+  assert.equal(combined.classification, "helpful");
+  assert.equal(state.cycle, 0);
+  assert.ok(Number.isFinite(standalone.outcomeDelta));
+  assert.ok(Number.isFinite(combined.outcomeDelta));
+});
+
+test("instrumentation is identified as learning value when immediate throughput is flat", () => {
+  const impact = evaluateInvestmentImpact(createScenario("dark-system"), [], "observe");
+
+  assert.equal(impact.outcomeDelta, 0);
+  assert.equal(impact.classification, "learning");
+  assert.ok(impact.coverageDelta > 0);
+});
+
+test("selected intervention guidance reports its marginal contribution", () => {
+  const impact = evaluateInvestmentImpact(
+    createScenario("partner-surge"),
+    ["full-kit", "partners"],
+    "partners"
+  );
+
+  assert.equal(impact.basis, "contribution");
 });

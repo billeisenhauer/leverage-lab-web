@@ -465,6 +465,58 @@ export function runCycle(originalState, selectedIds = [], predictedConstraint = 
   return { state, receipt };
 }
 
+function averageCoverage(state) {
+  return state.stages.reduce((sum, stage) => sum + stage.coverage, 0) / state.stages.length;
+}
+
+export function evaluateInvestmentImpact(originalState, selectedIds = [], investmentId = "") {
+  const investment = INVESTMENTS.find((candidate) => candidate.id === investmentId);
+  if (!investment || originalState.cycle >= originalState.maxCycles) return null;
+
+  const isSelected = selectedIds.includes(investmentId);
+  const comparisonIds = isSelected
+    ? selectedIds.filter((id) => id !== investmentId)
+    : [...selectedIds];
+  const candidateIds = isSelected
+    ? [...selectedIds]
+    : [...selectedIds, investmentId];
+
+  if (investmentCost(candidateIds) > 10) return null;
+
+  const prediction = originalState.diagnosis.perceived;
+  const comparison = runCycle(originalState, comparisonIds, prediction);
+  const candidate = runCycle(originalState, candidateIds, prediction);
+  const outcomeDelta = candidate.receipt.metric.outcomesPerWeek - comparison.receipt.metric.outcomesPerWeek;
+  const wipDelta = candidate.receipt.metric.averageWip - comparison.receipt.metric.averageWip;
+  const attentionDelta = candidate.receipt.metric.humanAttention - comparison.receipt.metric.humanAttention;
+  const coverageDelta = averageCoverage(candidate.state) - averageCoverage(comparison.state);
+
+  let classification = "neutral";
+  if (outcomeDelta > 0.05) {
+    classification = "helpful";
+  } else if (outcomeDelta < -0.05) {
+    classification = "harmful";
+  } else if (coverageDelta > 0.02) {
+    classification = "learning";
+  } else if (
+    (wipDelta < -0.5 && attentionDelta <= 0.25)
+    || (attentionDelta < -0.25 && wipDelta <= 0.5)
+  ) {
+    classification = "helpful";
+  } else if (wipDelta > 0.5 || attentionDelta > 0.25) {
+    classification = "harmful";
+  }
+
+  return {
+    classification,
+    basis: isSelected ? "contribution" : "addition",
+    outcomeDelta,
+    wipDelta,
+    attentionDelta,
+    coverageDelta
+  };
+}
+
 export function stageLabel(id) {
   return STAGES.find((stage) => stage.id === id)?.label || id;
 }

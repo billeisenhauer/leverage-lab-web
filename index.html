@@ -47,6 +47,24 @@ description: "A five-minute simulation of constraint movement in human-agent sof
     </div>
   </header>
 
+  <section class="mode-bar" aria-labelledby="mode-title">
+    <div class="mode-bar__copy">
+      <p class="section-kicker">Guidance level</p>
+      <h3 id="mode-title">Choose how much of the model you can see.</h3>
+      <p data-mode-summary aria-live="polite">Hard mode hides modeled impact until the learning receipt.</p>
+    </div>
+    <div class="mode-toggle" role="group" aria-label="Simulation difficulty">
+      <button type="button" data-mode="easy" aria-pressed="false">
+        <strong>Easy</strong>
+        <span>Show contextual impact</span>
+      </button>
+      <button type="button" data-mode="hard" aria-pressed="true">
+        <strong>Hard</strong>
+        <span>Read the evidence</span>
+      </button>
+    </div>
+  </section>
+
   <div class="scenario-picker" data-scenario-picker aria-label="Choose a scenario"></div>
 
   <div class="lab-console">
@@ -145,6 +163,8 @@ description: "A five-minute simulation of constraint movement in human-agent sof
       </header>
 
       <p class="help-drawer__goal"><strong>Your goal:</strong> increase accepted and owned outcomes without flooding the system with WIP, rework, or demands on scarce human attention.</p>
+
+      <p class="help-drawer__mode"><strong>Easy or Hard?</strong> Easy mode previews each intervention’s marginal next-cycle effect against your current bundle. Hard mode keeps that model result hidden until you run the cycle.</p>
 
       <ol class="play-steps">
         <li>

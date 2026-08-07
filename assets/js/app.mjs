@@ -4,6 +4,7 @@ import {
   STAGES,
   createScenario,
   effectiveCapacity,
+  evaluateInvestmentImpact,
   formatDelta,
   investmentCost,
   runCycle,
@@ -17,6 +18,7 @@ if (root) {
   let selected = new Set();
   let prediction = "";
   let hintLevel = 0;
+  let difficulty = "hard";
   let helpReturnFocus = null;
 
   function track(name, parameters = {}) {
@@ -45,8 +47,20 @@ if (root) {
     helpOpen: root.querySelector("[data-help-open]"),
     helpClose: root.querySelectorAll("[data-help-close]"),
     hintButton: root.querySelector("[data-hint-button]"),
-    hintPanel: root.querySelector("[data-hint-panel]")
+    hintPanel: root.querySelector("[data-hint-panel]"),
+    modeButtons: root.querySelectorAll("[data-mode]"),
+    modeSummary: root.querySelector("[data-mode-summary]")
   };
+
+  function renderMode() {
+    root.dataset.difficulty = difficulty;
+    elements.modeButtons.forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.mode === difficulty));
+    });
+    elements.modeSummary.textContent = difficulty === "easy"
+      ? "Easy mode compares every card with your current plan and recalculates after each selection."
+      : "Hard mode hides modeled impact until the learning receipt.";
+  }
 
   function renderScenarioPicker() {
     elements.scenarioPicker.innerHTML = SCENARIOS.map((scenario) => `
@@ -274,9 +288,16 @@ if (root) {
     elements.investments.innerHTML = INVESTMENTS.map((investment) => {
       const active = selected.has(investment.id);
       const cannotAfford = !active && spent + investment.cost > 10;
+      const impact = difficulty === "easy" && !cannotAfford
+        ? evaluateInvestmentImpact(state, [...selected], investment.id)
+        : null;
+      const impactClass = impact ? `is-impact-${impact.classification}` : "";
+      const guidance = impact
+        ? `<span class="guidance-cue guidance-cue--${impact.classification}">${guidanceText(impact)}</span>`
+        : "";
       return `
         <button
-          class="investment-card ${active ? "is-selected" : ""}"
+          class="investment-card ${active ? "is-selected" : ""} ${impactClass}"
           type="button"
           data-investment="${investment.id}"
           aria-pressed="${active}"
@@ -286,6 +307,7 @@ if (root) {
             <strong>${investment.label}</strong>
             <span>${investment.cost} pts</span>
           </span>
+          ${guidance}
           <span class="investment-card__mechanism">${investment.mechanism}</span>
           <span class="investment-card__risk">Tradeoff · ${investment.sideEffect}</span>
         </button>
@@ -302,6 +324,31 @@ if (root) {
         renderHint();
       });
     });
+  }
+
+  function guidanceText(impact) {
+    const label = {
+      helpful: "Helpful",
+      harmful: "Harmful",
+      learning: "Learning value",
+      neutral: "Neutral"
+    }[impact.classification];
+    const context = impact.basis === "contribution" ? "selected effect" : "with this plan";
+    if (impact.classification === "learning") {
+      return `${label} · ${context}: stronger telemetry`;
+    }
+    if (impact.classification === "neutral") {
+      return `${label} · ${context}: no material next-cycle change`;
+    }
+    if (Math.abs(impact.outcomeDelta) > 0.05) {
+      return `${label} · ${context}: ${formatDelta(impact.outcomeDelta)} accepted / week`;
+    }
+    if (Math.abs(impact.wipDelta) > 0.5) {
+      const direction = impact.wipDelta < 0 ? "less" : "more";
+      return `${label} · ${context}: ${Math.abs(impact.wipDelta).toFixed(1)} ${direction} WIP`;
+    }
+    const direction = impact.attentionDelta < 0 ? "less" : "more";
+    return `${label} · ${context}: ${Math.abs(impact.attentionDelta).toFixed(1)}h ${direction} human attention`;
   }
 
   function renderPrediction() {
@@ -459,7 +506,8 @@ if (root) {
       prediction: result.receipt.prediction,
       modeled_constraint: result.receipt.actual,
       prediction_correct: result.receipt.predictionCorrect,
-      accepted_per_week: Number(result.receipt.metric.outcomesPerWeek.toFixed(1))
+      accepted_per_week: Number(result.receipt.metric.outcomesPerWeek.toFixed(1)),
+      guidance_mode: difficulty
     });
     state = result.state;
     selected = new Set();
@@ -470,7 +518,8 @@ if (root) {
     if (state.cycle === state.maxCycles) {
       track("simulation_completed", {
         scenario_id: state.scenarioId,
-        accepted_per_week: Number(result.receipt.metric.outcomesPerWeek.toFixed(1))
+        accepted_per_week: Number(result.receipt.metric.outcomesPerWeek.toFixed(1)),
+        guidance_mode: difficulty
       });
     }
     elements.receipt.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -487,6 +536,7 @@ if (root) {
 
   function render() {
     renderScenarioPicker();
+    renderMode();
     renderStatus();
     renderDiagnosis();
     renderHint();
@@ -512,6 +562,14 @@ if (root) {
       hint_level: hintLevel
     });
     renderHint();
+  });
+  elements.modeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      difficulty = button.dataset.mode;
+      track("guidance_mode_changed", { guidance_mode: difficulty });
+      renderMode();
+      renderInvestments();
+    });
   });
   render();
 }
