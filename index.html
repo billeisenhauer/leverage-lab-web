@@ -169,7 +169,24 @@ description: "A five-minute simulation of constraint movement in human-agent sof
       <ol class="play-steps">
         <li>
           <span>1</span>
-          <div><strong>Read the signal</strong><p>The highlighted telemetry is an estimate—not model truth. Check queues, effective capacity, and coverage.</p></div>
+          <div>
+            <strong>Read the signal</strong>
+            <p>The highlighted telemetry is an estimate—not model truth. Read these three clues together:</p>
+            <dl class="signal-definitions">
+              <div>
+                <dt>Queue</dt>
+                <dd>Work accumulated at this stage. A large queue shows pressure, but does not prove the stage limits the whole system.</dd>
+              </div>
+              <div>
+                <dt>Effective cap.</dt>
+                <dd>Good work the stage can pass in a week: sustainable capacity × first-pass yield. A low value is a constraint clue.</dd>
+              </div>
+              <div>
+                <dt>Coverage</dt>
+                <dd>How much of the stage is visible in telemetry. Lower coverage makes the diagnosis less reliable.</dd>
+              </div>
+            </dl>
+          </div>
         </li>
         <li>
           <span>2</span>
@@ -191,7 +208,7 @@ description: "A five-minute simulation of constraint movement in human-agent sof
 
       <div class="help-drawer__tip">
         <span>Reading tip</span>
-        <p>The largest queue is not automatically the constraint. Start by comparing each stage’s effective capacity: sustainable capacity × first-pass yield.</p>
+        <p>Start with the lowest effective capacity, compare the queues around it, then use coverage to judge how much confidence to place in the signal.</p>
       </div>
 
       <button class="button button--primary drawer-start" type="button" data-help-close>Start cycle 1</button>
