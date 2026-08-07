@@ -19,10 +19,21 @@ if (root) {
   let prediction = "";
   let hintLevel = 0;
   let difficulty = "hard";
+  let simulationStarted = false;
   let helpReturnFocus = null;
 
   function track(name, parameters = {}) {
     window.leverageAnalytics?.track(name, parameters);
+  }
+
+  function markSimulationStarted(startAction) {
+    if (simulationStarted) return;
+    simulationStarted = true;
+    track("simulation_started", {
+      scenario_id: state.scenarioId,
+      guidance_mode: difficulty,
+      start_action: startAction
+    });
   }
 
   const elements = {
@@ -316,6 +327,7 @@ if (root) {
 
     elements.investments.querySelectorAll("[data-investment]").forEach((button) => {
       button.addEventListener("click", () => {
+        markSimulationStarted("investment");
         const id = button.dataset.investment;
         selected.has(id) ? selected.delete(id) : selected.add(id);
         clearNotice();
@@ -364,6 +376,7 @@ if (root) {
 
     elements.prediction.querySelectorAll("[data-predict]").forEach((button) => {
       button.addEventListener("click", () => {
+        markSimulationStarted("prediction");
         prediction = button.dataset.predict;
         clearNotice();
         renderPrediction();
@@ -530,6 +543,7 @@ if (root) {
     selected = new Set();
     prediction = "";
     hintLevel = 0;
+    simulationStarted = false;
     clearNotice();
     render();
   }
@@ -555,6 +569,7 @@ if (root) {
   elements.helpClose.forEach((button) => button.addEventListener("click", closeHelp));
   elements.helpDrawer.addEventListener("keydown", trapHelpFocus);
   elements.hintButton.addEventListener("click", () => {
+    markSimulationStarted("hint");
     hintLevel = Math.min(3, hintLevel + 1);
     track("hint_requested", {
       scenario_id: state.scenarioId,

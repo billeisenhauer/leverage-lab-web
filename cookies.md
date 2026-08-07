@@ -20,6 +20,7 @@ GA4 records ordinary page-view information, including the page address and title
 The simulator sends a small set of interaction events:
 
 - opening the how-to-play guide;
+- starting a simulation, including whether the first action was an intervention, prediction, or hint;
 - requesting a hint, including the hint level and current scenario;
 - changing between Easy and Hard guidance modes;
 - selecting a scenario;

@@ -8,9 +8,8 @@ author:
 url: "https://billeisenhauer.github.io"
 baseurl: "/leverage-lab-web"
 
-# Create a dedicated GA4 web data stream for Leverage Lab, then paste its
-# Measurement ID here. Analytics is only loaded in production after consent.
-google_analytics: ""
+# Analytics is only loaded in production after explicit visitor consent.
+google_analytics: "G-D1LY1DX2DR"
 
 markdown: kramdown
 permalink: pretty
