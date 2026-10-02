@@ -48,6 +48,21 @@ test("after cycle 2, arrivals limit output whatever you choose", () => {
   assert.ok(Math.abs(third.outcomes - settle.repeatPlan) < 0.6, "repeating the plan should not be the cause");
 });
 
+test("stage snapshots show the constraint moving and arrivals falling below capacity", () => {
+  const [start, afterFirst, afterSecond] = story.snapshots;
+  const effective = (snapshot, id) => snapshot.stages.find((stage) => stage.id === id).effective;
+  assert.equal(story.snapshots.length, 3);
+
+  assert.equal(start.slowest, "verify");
+  assert.ok(start.arrivals > effective(start, "verify"), "more arrives than Verify can pass, so work piles up");
+
+  assert.equal(afterFirst.slowest, "adopt");
+  assert.ok(afterFirst.arrivals < start.arrivals);
+
+  afterSecond.stages.forEach((stage) => assert.ok(stage.effective > afterSecond.arrivals, stage.id));
+  assert.equal(afterSecond.arrivals, story.settle.arrivals);
+});
+
 test("narration quotes the model's numbers and stays within one TTS request per scene", () => {
   const scenes = narration(story);
   const text = scenes.map((scene) => scene.text).join(" ");
@@ -55,7 +70,16 @@ test("narration quotes the model's numbers and stays within one TTS request per 
   assert.match(text, new RegExp(story.naive.cycles[3].outcomes.toFixed(1)));
   assert.match(text, new RegExp(`${story.opening.confidence} percent`));
   assert.match(text, /backlog/);
+  assert.match(text, /telemetry/i);
+  assert.match(text, /bottleneck/);
+  assert.match(text, new RegExp(`about ${story.snapshots[0].arrivals} new items arrive`));
   assert.match(text, new RegExp(`only ${story.settle.arrivals} arrive`));
   scenes.forEach((scene) => assert.ok(scene.text.length < 1000, scene.id));
   assert.equal(new Set(scenes.map((scene) => scene.id)).size, scenes.length);
+});
+
+test("captions split on sentence ends, not decimal points", async () => {
+  const { schedule, captionsFor } = await import("../remotion/src/schedule.mjs");
+  const [scene] = schedule([{ id: "x", text: "Verify can pass only 5.7. So Verify sets the pace." }]);
+  assert.deepEqual(captionsFor(scene).map((caption) => caption.text), ["Verify can pass only 5.7.", "So Verify sets the pace."]);
 });

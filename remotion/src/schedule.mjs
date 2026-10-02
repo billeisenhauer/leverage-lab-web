@@ -21,7 +21,7 @@ export function schedule(lines, timing = {}) {
 // Sentence-level captions, timed by each sentence's share of the scene's text.
 // Frames are relative to the scene's start.
 export function captionsFor(scene) {
-  const sentences = scene.text.match(/[^.!?]+[.!?]+/g) ?? [scene.text];
+  const sentences = scene.text.match(/.+?[.!?](?=\s|$)/g) ?? [scene.text];
   const total = sentences.reduce((sum, sentence) => sum + sentence.length, 0);
   let start = Math.round(LEAD_IN * FPS);
   return sentences.map((sentence) => {

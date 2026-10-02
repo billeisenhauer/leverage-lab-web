@@ -53,7 +53,8 @@ export const Tag: React.FC<{color: string; children: React.ReactNode; opacity?: 
   </span>
 );
 
-type StageView = {id: string; label: string; effective: number; queue: number; coverage: number};
+type StageView = {id: string; label: string; effective: number; queue?: number; coverage?: number};
+export type Reference = {value: number; label: string; color: string; show: number};
 
 // Six columns. Bar height is the stage's effective weekly capacity; dots are its queue.
 export const Pipeline: React.FC<{
@@ -63,18 +64,32 @@ export const Pipeline: React.FC<{
   governing?: {id: string; show: number};
   perceived?: {id: string; show: number; confidence: number};
   queues?: number;
-}> = ({stages, grow, fog = 0, governing, perceived, queues = 0}) => {
-  const max = Math.max(...stages.map((stage) => stage.effective));
-  const barMax = 360;
+  scaleMax?: number;
+  lines?: Reference[];
+}> = ({stages, grow, fog = 0, governing, perceived, queues = 0, scaleMax, lines = []}) => {
+  const max = scaleMax ?? Math.max(...stages.map((stage) => stage.effective));
+  const barMax = 440;
+  const barHeight = (value: number) => (value / max) * (barMax - 70);
   return (
     <div style={{position: "absolute", left: 120, right: 120, top: 200, display: "flex", gap: 28}}>
+      {lines.map((line) => (
+        <div key={line.color} style={{position: "absolute", left: -20, right: -20, top: 80 + barMax - barHeight(line.value), borderTop: `3px dashed ${line.color}`, opacity: line.show}} />
+      ))}
+      <div style={{position: "absolute", right: 0, top: -50, display: "flex", gap: 36, fontFamily: mono, fontSize: 22}}>
+        {lines.map((line) => (
+          <span key={line.color} style={{display: "flex", alignItems: "center", gap: 12, color: line.color, opacity: line.show}}>
+            <span style={{width: 34, borderTop: `3px dashed ${line.color}`}} />
+            {line.label}
+          </span>
+        ))}
+      </div>
       {stages.map((stage, index) => {
         const isGoverning = governing?.id === stage.id;
         const isPerceived = perceived?.id === stage.id;
         const stagger = interpolate(grow, [index * 0.08, index * 0.08 + 0.5], [0, 1], {extrapolateLeft: "clamp", extrapolateRight: "clamp"});
-        const height = (stage.effective / max) * (barMax - 70) * stagger;
+        const height = barHeight(stage.effective) * stagger;
         const color = isGoverning && governing!.show > 0 ? orange : isPerceived && perceived!.show > 0 ? amber : green;
-        const hidden = fog * (1 - stage.coverage);
+        const hidden = fog * (1 - (stage.coverage ?? 1));
         return (
           <div key={stage.id} style={{flex: 1, display: "flex", flexDirection: "column", alignItems: "stretch"}}>
             <div style={{height: 64, display: "flex", alignItems: "flex-end", justifyContent: "center"}}>
@@ -82,18 +97,18 @@ export const Pipeline: React.FC<{
               {isPerceived && <Tag color={amber} opacity={perceived!.show}>Looks stuck · {perceived!.confidence}%</Tag>}
             </div>
             <div style={{position: "relative", height: barMax, marginTop: 16, borderBottom: `2px solid ${lineDark}`, display: "flex", alignItems: "flex-end", justifyContent: "center"}}>
-              <div style={{width: "62%", height, background: color, borderRadius: "10px 10px 0 0", opacity: 0.92}} />
-              <div style={{position: "absolute", bottom: height + 12, fontFamily: mono, fontSize: 28, color: paper, opacity: stagger}}>
+              <div style={{width: "62%", height, background: color, borderRadius: "10px 10px 0 0", opacity: 0.92, position: "relative", zIndex: 1}} />
+              <div style={{position: "absolute", bottom: height + 10, zIndex: 1, fontFamily: mono, fontSize: 28, color: paper, opacity: stagger, background: "rgba(16, 35, 31, 0.9)", padding: "0 8px", borderRadius: 6}}>
                 {stage.effective.toFixed(1)}
               </div>
-              <div style={{position: "absolute", inset: 0, background: forest, opacity: hidden * 0.85, borderRadius: 10}} />
+              <div style={{position: "absolute", inset: 0, zIndex: 3, background: forest, opacity: hidden * 0.85, borderRadius: 10}} />
             </div>
             <div style={{marginTop: 18, textAlign: "center", fontSize: 30, fontWeight: 700}}>{stage.label.split(" / ")[0]}</div>
-            <div style={{marginTop: 6, textAlign: "center", fontFamily: mono, fontSize: 22, color: stage.coverage < 0.5 ? orange : mutedLight, opacity: fog}}>
-              {Math.round(stage.coverage * 100)}% visible
+            <div style={{marginTop: 6, textAlign: "center", fontFamily: mono, fontSize: 22, color: (stage.coverage ?? 1) < 0.5 ? orange : mutedLight, opacity: fog}}>
+              {Math.round((stage.coverage ?? 1) * 100)}% visible
             </div>
             <div style={{marginTop: 14, display: "flex", flexWrap: "wrap", gap: 7, justifyContent: "center", minHeight: 60, opacity: queues}}>
-              {Array.from({length: stage.queue}, (_, dot) => (
+              {Array.from({length: stage.queue ?? 0}, (_, dot) => (
                 <span key={dot} style={{width: 13, height: 13, borderRadius: 4, background: isGoverning ? orange : mutedLight, opacity: 0.85}} />
               ))}
             </div>
@@ -107,8 +122,6 @@ export const Pipeline: React.FC<{
 export type Series = {points: number[]; color: string; progress: number; opacity?: number; labels?: string[]; start?: number; valuesBelow?: boolean};
 
 // Accepted outcomes per week by cycle. Cycle 0 is the scenario's baseline.
-type Reference = {value: number; label: string; color: string; show: number};
-
 export const OutcomeChart: React.FC<{baseline: number; series: Series[]; show: number; yMax?: number; reference?: Reference}> = ({baseline, series, show, yMax = 11, reference}) => {
   const left = 230, top = 190, width = 940, height = 560;
   const x = (cycle: number) => left + (cycle / 4) * width;

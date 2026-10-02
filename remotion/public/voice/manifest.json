@@ -1,27 +1,27 @@
 {
   "hook": {
-    "hash": "842c8f0b17c74e17",
-    "seconds": 6.408707
+    "hash": "4a49a18efdc5cc50",
+    "seconds": 12.538776
   },
-  "pipeline": {
-    "hash": "59406d747cb2db10",
-    "seconds": 18.715283
+  "constraint": {
+    "hash": "ff5414cc5b980bc8",
+    "seconds": 27.817506
   },
-  "perceived": {
-    "hash": "3fb6dcc595fd6dd8",
-    "seconds": 18.065125
+  "telemetry": {
+    "hash": "1d78ea277a9a4ec9",
+    "seconds": 21.640998
   },
   "naive": {
     "hash": "bcb7e3d43ee1ef50",
     "seconds": 14.907211
   },
-  "chase": {
-    "hash": "b2adaa1c31954b60",
-    "seconds": 18.297324
+  "moves": {
+    "hash": "dc65894973c9a509",
+    "seconds": 26.563628
   },
   "settle": {
-    "hash": "050e867fb0d6e71d",
-    "seconds": 12.910295
+    "hash": "d6126d429e900a09",
+    "seconds": 17.786485
   },
   "close": {
     "hash": "f6f327e766cc189f",

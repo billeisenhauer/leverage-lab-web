@@ -43,6 +43,24 @@ function settleAfter(plan) {
   };
 }
 
+// The stages before cycle 1 and after cycles 1 and 2: what each can pass,
+// how much new work arrives, and which stage is slowest.
+function snapshots(plan) {
+  let state = createScenario(SCENARIO);
+  const snap = () => ({
+    cycle: state.cycle,
+    arrivals: state.demand,
+    slowest: state.diagnosis.actual,
+    stages: state.stages.map((stage) => ({ id: stage.id, label: stage.label, effective: effectiveCapacity(stage) }))
+  });
+  const result = [snap()];
+  plan.forEach((bundle) => {
+    state = runCycle(state, bundle).state;
+    result.push(snap());
+  });
+  return result;
+}
+
 export function buildStory() {
   const start = createScenario(SCENARIO);
   return {
@@ -63,6 +81,7 @@ export function buildStory() {
     },
     naive: { bundle: NAIVE_BUNDLE, cycles: play(Array(4).fill(NAIVE_BUNDLE)) },
     chase: { cycles: play(CHASE_PLAN) },
+    snapshots: snapshots(CHASE_PLAN.slice(0, 2)),
     settle: settleAfter(CHASE_PLAN.slice(0, 2))
   };
 }
@@ -77,31 +96,32 @@ export function narration(story) {
   const stage = (id) => story.opening.stages.find((candidate) => candidate.id === id);
   const naive = story.naive.cycles;
   const [first, second, third] = story.chase.cycles;
+  const [{ arrivals: arrive }, afterFirst, afterSecond] = story.snapshots;
 
   return [
     {
       id: "hook",
-      text: `${story.prompt} This is Leverage Lab. It is a small simulator that shows why.`
+      text: "Here is a result that feels wrong. A team nearly doubles how much it can build. But the work that people accept and use does not grow. More building did not create more outcomes. We explore why in Leverage Lab."
     },
     {
-      id: "pipeline",
-      text: `Work moves through six stages, from shape to adopt. Work counts only when people use it and someone owns it. Each stage can pass a limited amount of good work each week. Build can pass about ${whole(stage("build").effective)} items. Verify can pass about ${one(stage("verify").effective)}. So Verify sets the pace for the whole system.`
+      id: "constraint",
+      text: `Work moves through six stages, from shape to adopt. The slowest stage is the constraint, the bottleneck. Work can leave only as fast as it passes that stage. Speed up any other stage, and nothing more gets out. Work just piles up in front of the bottleneck. Here, about ${one(arrive)} new items arrive each week. Build can pass ${whole(stage("build").effective)}. Verify can pass only ${one(stage("verify").effective)}. So Verify sets the pace for everything.`
     },
     {
-      id: "perceived",
-      text: `But you cannot see that. Telemetry shows ${pct(stage("build").coverage)} percent of Build, and only ${pct(stage("verify").coverage)} percent of Verify. Build has the biggest queue and the most activity. So the evidence points at Build, with ${story.opening.confidence} percent confidence. The loudest stage is not the stage that limits output.`
+      id: "telemetry",
+      text: `To find the constraint, you need telemetry. Telemetry is data about how work moves through each stage. Without it, you can only see which stage is loud. Here, telemetry covers ${pct(stage("build").coverage)} percent of Build, but only ${pct(stage("verify").coverage)} percent of Verify. Build has the biggest queue and the most activity. So the evidence points at Build, with ${story.opening.confidence} percent confidence. It is wrong, because the data is missing where it matters.`
     },
     {
       id: "naive",
       text: `Suppose you trust that evidence. Every cycle, you add more agents and a delivery partner. Over four six-week cycles, accepted outcomes fall from ${one(naive[0].outcomes)} to ${one(naive[3].outcomes)} per week. Work in progress grows from ${whole(naive[0].wip)} items to ${whole(naive[3].wip)}. More building made the system worse.`
     },
     {
-      id: "chase",
-      text: `Now spend at the real constraint. In cycle one, automate verification and limit new work. Output rises to ${one(first.outcomes)} per week, and the constraint moves to ${stageName(first.constraint)}. In cycle two, fund adoption and make handoffs clear. Output reaches ${one(second.outcomes)} per week, as the backlog drains.`
+      id: "moves",
+      text: `Now spend at the real constraint. In cycle one, automate verification and limit new work. Verify gets faster, and arrivals drop to ${one(afterFirst.arrivals)}. Now ${stageName(afterFirst.slowest)} is the slowest stage, so the constraint moves to ${stageName(afterFirst.slowest)}. Output rises to ${one(first.outcomes)} per week. In cycle two, fund adoption and make handoffs clear. Arrivals drop to ${one(afterSecond.arrivals)}, and every stage can now pass more than that. The backlog drains, and output reaches ${one(second.outcomes)} per week.`
     },
     {
       id: "settle",
-      text: `Then output falls back to ${one(third.outcomes)} per week, even if you change nothing. The ${one(second.outcomes)} was the backlog draining. Now the stages can pass about ${whole(story.settle.slowest)} items a week, but only ${one(story.settle.arrivals)} arrive. The limit has left the pipeline. It is now how much new work comes in.`
+      text: `But a backlog runs out. In the next cycles, output falls back to ${one(third.outcomes)} per week, even if you change nothing. The pipeline can pass about ${whole(story.settle.slowest)} items a week, but only ${one(story.settle.arrivals)} arrive. The constraint has left the pipeline. Now the limit is how much new work comes in.`
     },
     {
       id: "close",

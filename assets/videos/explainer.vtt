@@ -1,115 +1,127 @@
 WEBVTT
 
-00:00:00.300 --> 00:00:01.933
-Build capacity nearly doubled.
+00:00:00.300 --> 00:00:02.333
+Here is a result that feels wrong.
 
-00:00:01.933 --> 00:00:03.400
-Accepted outcomes did not.
+00:00:02.333 --> 00:00:05.033
+A team nearly doubles how much it can build.
 
-00:00:03.400 --> 00:00:04.600
-This is Leverage Lab.
+00:00:05.033 --> 00:00:08.333
+But the work that people accept and use does not grow.
 
-00:00:04.600 --> 00:00:06.766
-It is a small simulator that shows why.
+00:00:08.333 --> 00:00:10.966
+More building did not create more outcomes.
 
-00:00:07.933 --> 00:00:11.433
+00:00:10.966 --> 00:00:12.866
+We explore why in Leverage Lab.
+
+00:00:14.066 --> 00:00:17.766
 Work moves through six stages, from shape to adopt.
 
-00:00:11.433 --> 00:00:15.333
-Work counts only when people use it and someone owns it.
+00:00:17.766 --> 00:00:21.600
+The slowest stage is the constraint, the bottleneck.
 
-00:00:15.333 --> 00:00:19.533
-Each stage can pass a limited amount of good work each week.
+00:00:21.600 --> 00:00:25.433
+Work can leave only as fast as it passes that stage.
 
-00:00:19.533 --> 00:00:21.666
-Build can pass about 19 items.
+00:00:25.433 --> 00:00:29.266
+Speed up any other stage, and nothing more gets out.
 
-00:00:21.666 --> 00:00:23.366
-Verify can pass about 5.
+00:00:29.266 --> 00:00:32.666
+Work just piles up in front of the bottleneck.
 
-00:00:23.366 --> 00:00:23.500
-7.
+00:00:32.666 --> 00:00:35.700
+Here, about 8 new items arrive each week.
 
-00:00:23.500 --> 00:00:26.666
-So Verify sets the pace for the whole system.
+00:00:35.700 --> 00:00:37.066
+Build can pass 19.
 
-00:00:27.866 --> 00:00:29.533
-But you cannot see that.
+00:00:37.066 --> 00:00:38.966
+Verify can pass only 5.7.
 
-00:00:29.533 --> 00:00:34.300
-Telemetry shows 95 percent of Build, and only 32 percent of Verify.
+00:00:38.966 --> 00:00:41.866
+So Verify sets the pace for everything.
 
-00:00:34.300 --> 00:00:37.866
+00:00:43.100 --> 00:00:45.433
+To find the constraint, you need telemetry.
+
+00:00:45.433 --> 00:00:48.633
+Telemetry is data about how work moves through each stage.
+
+00:00:48.633 --> 00:00:51.366
+Without it, you can only see which stage is loud.
+
+00:00:51.366 --> 00:00:55.433
+Here, telemetry covers 95 percent of Build, but only 32 percent of Verify.
+
+00:00:55.433 --> 00:00:58.200
 Build has the biggest queue and the most activity.
 
-00:00:37.866 --> 00:00:42.133
+00:00:58.200 --> 00:01:01.533
 So the evidence points at Build, with 71 percent confidence.
 
-00:00:42.133 --> 00:00:45.966
-The loudest stage is not the stage that limits output.
+00:01:01.533 --> 00:01:04.733
+It is wrong, because the data is missing where it matters.
 
-00:00:47.166 --> 00:00:49.100
+00:01:05.966 --> 00:01:07.900
 Suppose you trust that evidence.
 
-00:00:49.100 --> 00:00:52.533
+00:01:07.900 --> 00:01:11.333
 Every cycle, you add more agents and a delivery partner.
 
-00:00:52.533 --> 00:00:56.033
-Over four six-week cycles, accepted outcomes fall from 5.
+00:01:11.333 --> 00:01:15.933
+Over four six-week cycles, accepted outcomes fall from 5.2 to 1.3 per week.
 
-00:00:56.033 --> 00:00:56.466
-2 to 1.
-
-00:00:56.466 --> 00:00:57.133
-3 per week.
-
-00:00:57.133 --> 00:00:59.866
+00:01:15.933 --> 00:01:18.666
 Work in progress grows from 64 items to 148.
 
-00:00:59.866 --> 00:01:02.100
+00:01:18.666 --> 00:01:20.900
 More building made the system worse.
 
-00:01:03.300 --> 00:01:05.633
+00:01:22.100 --> 00:01:24.300
 Now spend at the real constraint.
 
-00:01:05.633 --> 00:01:09.600
+00:01:24.300 --> 00:01:28.000
 In cycle one, automate verification and limit new work.
 
-00:01:09.600 --> 00:01:10.933
-Output rises to 6.
+00:01:28.000 --> 00:01:31.033
+Verify gets faster, and arrivals drop to 6.5.
 
-00:01:10.933 --> 00:01:14.200
-5 per week, and the constraint moves to Adopt.
+00:01:31.033 --> 00:01:35.400
+Now Adopt is the slowest stage, so the constraint moves to Adopt.
 
-00:01:14.200 --> 00:01:17.966
+00:01:35.400 --> 00:01:37.400
+Output rises to 6.5 per week.
+
+00:01:37.400 --> 00:01:40.900
 In cycle two, fund adoption and make handoffs clear.
 
-00:01:17.966 --> 00:01:21.600
-Output reaches 10 per week, as the backlog drains.
+00:01:40.900 --> 00:01:45.200
+Arrivals drop to 5, and every stage can now pass more than that.
 
-00:01:22.800 --> 00:01:24.333
-Then output falls back to 4.
+00:01:45.200 --> 00:01:48.633
+The backlog drains, and output reaches 10 per week.
 
-00:01:24.333 --> 00:01:26.466
-7 per week, even if you change nothing.
+00:01:49.866 --> 00:01:51.500
+But a backlog runs out.
 
-00:01:26.466 --> 00:01:28.266
-The 10 was the backlog draining.
+00:01:51.500 --> 00:01:57.366
+In the next cycles, output falls back to 4.7 per week, even if you change nothing.
 
-00:01:28.266 --> 00:01:31.833
-Now the stages can pass about 9 items a week, but only 5 arrive.
+00:01:57.366 --> 00:02:01.833
+The pipeline can pass about 9 items a week, but only 5 arrive.
 
-00:01:31.833 --> 00:01:33.633
-The limit has left the pipeline.
+00:02:01.833 --> 00:02:04.533
+The constraint has left the pipeline.
 
-00:01:33.633 --> 00:01:35.700
-It is now how much new work comes in.
+00:02:04.533 --> 00:02:07.700
+Now the limit is how much new work comes in.
 
-00:01:36.933 --> 00:01:38.166
+00:02:08.866 --> 00:02:10.100
 The constraint moves.
 
-00:01:38.166 --> 00:01:40.133
+00:02:10.100 --> 00:02:12.066
 Find it again after every change.
 
-00:01:40.133 --> 00:01:41.766
+00:02:12.066 --> 00:02:13.700
 Try it yourself in the lab.

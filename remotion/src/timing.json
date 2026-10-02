@@ -1,9 +1,9 @@
 {
-  "hook": 6.41,
-  "pipeline": 18.72,
-  "perceived": 18.07,
+  "hook": 12.54,
+  "constraint": 27.82,
+  "telemetry": 21.64,
   "naive": 14.91,
-  "chase": 18.3,
-  "settle": 12.91,
+  "moves": 26.56,
+  "settle": 17.79,
   "close": 4.83
 }
