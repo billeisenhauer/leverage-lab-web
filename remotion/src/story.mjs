@@ -4,11 +4,14 @@ import { createScenario, effectiveCapacity, runCycle, stageLabel } from "../../a
 
 export const SCENARIO = "agent-wave";
 export const NAIVE_BUNDLE = ["agents", "partners"];
+// Two cycles spent at the constraint, then two with no change. After cycle 2
+// the stages can pass more than arrives, so output settles to the arrival
+// rate whatever you choose.
 export const CHASE_PLAN = [
   ["verification", "release-control"],
   ["adoption", "handoff", "release-control"],
-  ["adoption", "handoff", "release-control"],
-  ["adoption", "handoff", "release-control"]
+  [],
+  []
 ];
 
 function play(plan) {
@@ -26,6 +29,18 @@ function play(plan) {
       constraint: result.receipt.actual
     };
   });
+}
+
+// The system after the productive cycles: what arrives, what the slowest
+// stage can pass, and what repeating the last plan would score instead.
+function settleAfter(plan) {
+  let state = createScenario(SCENARIO);
+  plan.forEach((bundle) => { state = runCycle(state, bundle).state; });
+  return {
+    arrivals: state.demand,
+    slowest: Math.min(...state.stages.map(effectiveCapacity)),
+    repeatPlan: runCycle(state, plan[plan.length - 1]).receipt.metric.outcomesPerWeek
+  };
 }
 
 export function buildStory() {
@@ -47,7 +62,8 @@ export function buildStory() {
       }))
     },
     naive: { bundle: NAIVE_BUNDLE, cycles: play(Array(4).fill(NAIVE_BUNDLE)) },
-    chase: { cycles: play(CHASE_PLAN) }
+    chase: { cycles: play(CHASE_PLAN) },
+    settle: settleAfter(CHASE_PLAN.slice(0, 2))
   };
 }
 
@@ -60,7 +76,7 @@ const stageName = (id) => stageLabel(id).split(" / ")[0];
 export function narration(story) {
   const stage = (id) => story.opening.stages.find((candidate) => candidate.id === id);
   const naive = story.naive.cycles;
-  const [first, second, third, fourth] = story.chase.cycles;
+  const [first, second, third] = story.chase.cycles;
 
   return [
     {
@@ -81,11 +97,11 @@ export function narration(story) {
     },
     {
       id: "chase",
-      text: `Now spend at the real constraint. In cycle one, automate verification and limit new work. Output rises to ${one(first.outcomes)} per week, and the constraint moves to ${stageName(first.constraint)}. In cycle two, fund adoption and make handoffs clear. Output reaches ${one(second.outcomes)} per week. And the constraint moves back to ${stageName(second.constraint)}.`
+      text: `Now spend at the real constraint. In cycle one, automate verification and limit new work. Output rises to ${one(first.outcomes)} per week, and the constraint moves to ${stageName(first.constraint)}. In cycle two, fund adoption and make handoffs clear. Output reaches ${one(second.outcomes)} per week, as the backlog drains.`
     },
     {
-      id: "stale",
-      text: `Then you repeat the plan that worked. Output falls to ${one(third.outcomes)}, and then to ${one(fourth.outcomes)}. The constraint moved, and the repeated limit on new work now starves the system.`
+      id: "settle",
+      text: `Then output falls back to ${one(third.outcomes)} per week, even if you change nothing. The ${one(second.outcomes)} was the backlog draining. Now the stages can pass about ${whole(story.settle.slowest)} items a week, but only ${one(story.settle.arrivals)} arrive. The limit has left the pipeline. It is now how much new work comes in.`
     },
     {
       id: "close",

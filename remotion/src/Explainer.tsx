@@ -2,7 +2,7 @@ import React from "react";
 import {AbsoluteFill, Html5Audio, interpolate, Sequence, staticFile, useCurrentFrame} from "remotion";
 import {Frame, Headline, OutcomeChart, Pipeline, SidePanel, Stat, Tag, ease, type Series} from "./parts";
 import {LEAD_IN_FRAMES, scenes, story, type Scene} from "./timeline";
-import {amber, green, mono, mutedLight, orange, paper, sans} from "./theme";
+import {amber, blue, green, mono, mutedLight, orange, sans} from "./theme";
 
 const STAGE_NAMES: Record<string, string> = {
   verify: "Verify", adopt: "Adopt", release: "Release", "full-kit": "Full Kit", build: "Build", shape: "Shape"
@@ -17,7 +17,8 @@ const useProgress = (scene: Scene) => {
 
 const naivePoints = [story.baseline, ...story.naive.cycles.map((cycle) => cycle.outcomes)];
 const chasePoints = [story.baseline, ...story.chase.cycles.map((cycle) => cycle.outcomes)];
-const chaseLabels = ["", ...story.chase.cycles.map((cycle) => `${STAGE_NAMES[cycle.from]} → ${STAGE_NAMES[cycle.constraint]}`)];
+const [firstChase] = story.chase.cycles;
+const chaseLabels = ["", `${STAGE_NAMES[firstChase.from]} → ${STAGE_NAMES[firstChase.constraint]}`, "backlog drains", "no change", "no change"];
 
 const Hook: React.FC<{scene: Scene}> = ({scene}) => {
   const frame = useCurrentFrame();
@@ -94,7 +95,7 @@ const ChaseScene: React.FC<{scene: Scene}> = ({scene}) => {
         show={1}
         series={[
           {points: naivePoints, color: orange, progress: 4, opacity: 0.25},
-          {points: chasePoints.slice(0, 3), color: green, progress: draw, labels: chaseLabels}
+          {points: chasePoints.slice(0, 3), color: green, progress: draw, labels: chaseLabels.slice(0, 3)}
         ]}
       />
       <SidePanel show={at(0.05, 0.15)}>
@@ -105,24 +106,26 @@ const ChaseScene: React.FC<{scene: Scene}> = ({scene}) => {
   );
 };
 
-const StaleScene: React.FC<{scene: Scene}> = ({scene}) => {
+const SettleScene: React.FC<{scene: Scene}> = ({scene}) => {
   const at = useProgress(scene);
   return (
-    <Frame scene={scene} kicker="05 · Repeat what worked">
+    <Frame scene={scene} kicker="05 · The backlog runs out">
       <OutcomeChart
         baseline={story.baseline}
         show={1}
+        reference={{value: story.settle.arrivals, label: `arrivals ${story.settle.arrivals}/wk`, color: blue, show: at(0.45, 0.6)}}
         series={[
           {points: naivePoints, color: orange, progress: 4, opacity: 0.25},
-          {points: chasePoints.slice(0, 3), color: green, progress: 2, labels: chaseLabels},
-          {points: chasePoints, color: amber, start: 2, progress: 2 + at(0.1, 0.55) * 2, labels: chaseLabels.map((label, i) => (i > 2 ? "same plan" : ""))}
+          {points: chasePoints.slice(0, 3), color: green, progress: 2, labels: chaseLabels.slice(0, 3)},
+          {points: chasePoints, color: amber, start: 2, valuesBelow: true, progress: 2 + at(0.05, 0.3) * 2, labels: chaseLabels.map((label, i) => (i > 2 ? label : ""))}
         ]}
       />
-      <SidePanel show={at(0.05, 0.15)}>
-        <Step n={3} show={at(0.1, 0.2)} text="Same plan as cycle 2." />
-        <Step n={4} show={at(0.35, 0.45)} text="Same plan again." />
-        <div style={{fontSize: 30, lineHeight: 1.35, color: paper, opacity: at(0.65, 0.78)}}>
-          The constraint moved. The old fix now starves the system.
+      <SidePanel show={at(0.03, 0.12)}>
+        <Step n={3} show={at(0.05, 0.15)} text="Change nothing." />
+        <Step n={4} show={at(0.2, 0.3)} text="Still nothing." />
+        <Stat label="Slowest stage can pass" value={`${Math.round(story.settle.slowest)}/wk`} color={green} />
+        <div style={{opacity: at(0.45, 0.6)}}>
+          <Stat label="New work arriving" value={`${story.settle.arrivals}/wk`} color={blue} />
         </div>
       </SidePanel>
     </Frame>
@@ -155,7 +158,7 @@ const Close: React.FC<{scene: Scene}> = ({scene}) => {
 };
 
 const VIEWS: Record<string, React.FC<{scene: Scene}>> = {
-  hook: Hook, pipeline: PipelineScene, perceived: PerceivedScene, naive: NaiveScene, chase: ChaseScene, stale: StaleScene, close: Close
+  hook: Hook, pipeline: PipelineScene, perceived: PerceivedScene, naive: NaiveScene, chase: ChaseScene, settle: SettleScene, close: Close
 };
 
 export const Explainer: React.FC = () => (

@@ -104,10 +104,12 @@ export const Pipeline: React.FC<{
   );
 };
 
-export type Series = {points: number[]; color: string; progress: number; opacity?: number; labels?: string[]; start?: number};
+export type Series = {points: number[]; color: string; progress: number; opacity?: number; labels?: string[]; start?: number; valuesBelow?: boolean};
 
 // Accepted outcomes per week by cycle. Cycle 0 is the scenario's baseline.
-export const OutcomeChart: React.FC<{baseline: number; series: Series[]; show: number; yMax?: number}> = ({baseline, series, show, yMax = 11}) => {
+type Reference = {value: number; label: string; color: string; show: number};
+
+export const OutcomeChart: React.FC<{baseline: number; series: Series[]; show: number; yMax?: number; reference?: Reference}> = ({baseline, series, show, yMax = 11, reference}) => {
   const left = 230, top = 190, width = 940, height = 560;
   const x = (cycle: number) => left + (cycle / 4) * width;
   const y = (value: number) => top + height - (value / yMax) * height;
@@ -138,6 +140,12 @@ export const OutcomeChart: React.FC<{baseline: number; series: Series[]; show: n
       <text x={left} y={top - 40} fill={paper} fontFamily={sans} fontSize={30} fontWeight={700}>Accepted outcomes per week</text>
       <line x1={left} x2={left + width} y1={y(baseline)} y2={y(baseline)} stroke={mutedLight} strokeWidth={2} strokeDasharray="10 10" />
       <text x={left + width + 18} y={y(baseline) + 8} fill={mutedLight} fontFamily={mono} fontSize={22}>baseline</text>
+      {reference && (
+        <g opacity={reference.show}>
+          <line x1={left} x2={left + width} y1={y(reference.value)} y2={y(reference.value)} stroke={reference.color} strokeWidth={3} strokeDasharray="4 8" />
+          <text x={left + 12} y={y(reference.value) + 34} fill={reference.color} fontFamily={mono} fontSize={22}>{reference.label}</text>
+        </g>
+      )}
       {series.map((line, index) => (
         <g key={index} opacity={line.opacity ?? 1}>
           <path d={path(line)} fill="none" stroke={line.color} strokeWidth={7} strokeLinejoin="round" strokeLinecap="round" />
@@ -146,7 +154,7 @@ export const OutcomeChart: React.FC<{baseline: number; series: Series[]; show: n
               <g key={cycle}>
                 <circle cx={x(cycle)} cy={y(value)} r={11} fill={line.color} />
                 {(line.opacity ?? 1) === 1 && (
-                  <text x={x(cycle)} y={y(value) - 26} fill={paper} fontFamily={mono} fontSize={28} textAnchor="middle">{value.toFixed(1)}</text>
+                  <text x={x(cycle)} y={line.valuesBelow ? y(value) + 48 : y(value) - 26} fill={paper} fontFamily={mono} fontSize={28} textAnchor="middle">{value.toFixed(1)}</text>
                 )}
                 {line.labels?.[cycle] && (
                   <text x={x(cycle)} y={top + height + 88} fill={line.color} fontFamily={mono} fontSize={22} textAnchor="middle">{line.labels[cycle]}</text>

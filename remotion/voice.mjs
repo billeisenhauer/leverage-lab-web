@@ -6,7 +6,7 @@
 // Clips are cached by text, model, and voice, so re-runs only pay for changed scenes.
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { buildStory, narration } from "./src/story.mjs";
 
 const API = "https://api.elevenlabs.io/v1";
@@ -43,6 +43,7 @@ if (!voice) {
 mkdirSync(VOICE_DIR, { recursive: true });
 const manifest = existsSync(MANIFEST) ? JSON.parse(readFileSync(MANIFEST, "utf8")) : {};
 const timing = {};
+const current = {};
 let billed = 0;
 
 for (const { id, text } of narration(buildStory())) {
@@ -64,10 +65,14 @@ for (const { id, text } of narration(buildStory())) {
   }
 
   const seconds = Number(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]).toString().trim());
-  manifest[id] = { hash, seconds };
+  current[id] = { hash, seconds };
   timing[id] = Math.round(seconds * 100) / 100;
 }
 
-writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`);
+// Drop clips for scenes that no longer exist.
+for (const id of Object.keys(manifest)) {
+  if (!(id in current)) rmSync(`${VOICE_DIR}/${id}.mp3`, { force: true });
+}
+writeFileSync(MANIFEST, `${JSON.stringify(current, null, 2)}\n`);
 writeFileSync("src/timing.json", `${JSON.stringify(timing, null, 2)}\n`);
 console.log(`\n${billed} characters billed this run. Narration runs ${Object.values(timing).reduce((a, b) => a + b, 0).toFixed(1)}s.`);

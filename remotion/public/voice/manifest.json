@@ -16,12 +16,12 @@
     "seconds": 14.907211
   },
   "chase": {
-    "hash": "1fb8b18efe1bf701",
-    "seconds": 16.346848
+    "hash": "b2adaa1c31954b60",
+    "seconds": 18.297324
   },
-  "stale": {
-    "hash": "1d5a6cbd401bcb6b",
-    "seconds": 9.845261
+  "settle": {
+    "hash": "050e867fb0d6e71d",
+    "seconds": 12.910295
   },
   "close": {
     "hash": "f6f327e766cc189f",

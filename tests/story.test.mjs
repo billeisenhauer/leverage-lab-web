@@ -27,22 +27,25 @@ test("adding builders every cycle lowers outcomes and grows WIP each cycle", () 
   cycles.forEach((cycle) => assert.equal(cycle.constraint, "verify"));
 });
 
-test("spending at the constraint raises outcomes and moves the constraint twice", () => {
+test("spending at the constraint raises outcomes, then the backlog drains", () => {
   const [first, second] = story.chase.cycles;
   assert.ok(first.outcomes > story.baseline);
   assert.equal(first.from, "verify");
   assert.equal(first.constraint, "adopt");
   assert.ok(second.outcomes > first.outcomes);
-  assert.equal(second.from, "adopt");
-  assert.equal(second.constraint, "verify");
+  assert.ok(second.wip < first.wip, "cycle 2's peak should come from draining the backlog");
 });
 
-test("repeating the winning bundle lowers outcomes below the baseline", () => {
+test("after cycle 2, arrivals limit output whatever you choose", () => {
   const [, second, third, fourth] = story.chase.cycles;
-  assert.deepEqual(third.bundle, second.bundle);
-  assert.deepEqual(fourth.bundle, second.bundle);
-  assert.ok(third.outcomes < story.baseline);
-  assert.ok(fourth.outcomes < third.outcomes);
+  const { settle } = story;
+  assert.deepEqual(third.bundle, []);
+  assert.deepEqual(fourth.bundle, []);
+  assert.ok(third.outcomes < second.outcomes);
+  assert.ok(settle.arrivals < settle.slowest, "the stages can pass more work than arrives");
+  assert.ok(Math.abs(third.outcomes - settle.arrivals) < 1);
+  assert.ok(Math.abs(fourth.outcomes - settle.arrivals) < 1);
+  assert.ok(Math.abs(third.outcomes - settle.repeatPlan) < 0.6, "repeating the plan should not be the cause");
 });
 
 test("narration quotes the model's numbers and stays within one TTS request per scene", () => {
@@ -51,6 +54,8 @@ test("narration quotes the model's numbers and stays within one TTS request per 
   assert.match(text, new RegExp(story.naive.cycles[0].outcomes.toFixed(1)));
   assert.match(text, new RegExp(story.naive.cycles[3].outcomes.toFixed(1)));
   assert.match(text, new RegExp(`${story.opening.confidence} percent`));
+  assert.match(text, /backlog/);
+  assert.match(text, new RegExp(`only ${story.settle.arrivals} arrive`));
   scenes.forEach((scene) => assert.ok(scene.text.length < 1000, scene.id));
   assert.equal(new Set(scenes.map((scene) => scene.id)).size, scenes.length);
 });

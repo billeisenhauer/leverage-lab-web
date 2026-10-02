@@ -7,6 +7,7 @@ export type Story = {
   opening: {actual: string; perceived: string; confidence: number; stages: StageView[]};
   naive: {bundle: string[]; cycles: Cycle[]};
   chase: {cycles: Cycle[]};
+  settle: {arrivals: number; slowest: number; repeatPlan: number};
 };
 export const SCENARIO: string;
 export const NAIVE_BUNDLE: string[];
