@@ -1,1 +1,9 @@
-{}
+{
+  "hook": 6.41,
+  "pipeline": 18.72,
+  "perceived": 18.07,
+  "naive": 14.91,
+  "chase": 16.35,
+  "stale": 9.85,
+  "close": 4.83
+}

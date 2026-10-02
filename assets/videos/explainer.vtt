@@ -1,115 +1,115 @@
 WEBVTT
 
-00:00:00.300 --> 00:00:02.300
+00:00:00.300 --> 00:00:01.933
 Build capacity nearly doubled.
 
-00:00:02.300 --> 00:00:04.100
+00:00:01.933 --> 00:00:03.400
 Accepted outcomes did not.
 
-00:00:04.100 --> 00:00:05.566
+00:00:03.400 --> 00:00:04.600
 This is Leverage Lab.
 
-00:00:05.566 --> 00:00:08.233
+00:00:04.600 --> 00:00:06.766
 It is a small simulator that shows why.
 
-00:00:09.466 --> 00:00:12.866
+00:00:07.933 --> 00:00:11.433
 Work moves through six stages, from shape to adopt.
 
-00:00:12.866 --> 00:00:16.666
+00:00:11.433 --> 00:00:15.333
 Work counts only when people use it and someone owns it.
 
-00:00:16.666 --> 00:00:20.733
+00:00:15.333 --> 00:00:19.533
 Each stage can pass a limited amount of good work each week.
 
-00:00:20.733 --> 00:00:22.800
+00:00:19.533 --> 00:00:21.666
 Build can pass about 19 items.
 
-00:00:22.800 --> 00:00:24.466
+00:00:21.666 --> 00:00:23.366
 Verify can pass about 5.
 
-00:00:24.466 --> 00:00:24.600
+00:00:23.366 --> 00:00:23.500
 7.
 
-00:00:24.600 --> 00:00:27.666
+00:00:23.500 --> 00:00:26.666
 So Verify sets the pace for the whole system.
 
-00:00:28.866 --> 00:00:30.466
+00:00:27.866 --> 00:00:29.533
 But you cannot see that.
 
-00:00:30.466 --> 00:00:35.000
+00:00:29.533 --> 00:00:34.300
 Telemetry shows 95 percent of Build, and only 32 percent of Verify.
 
-00:00:35.000 --> 00:00:38.400
+00:00:34.300 --> 00:00:37.866
 Build has the biggest queue and the most activity.
 
-00:00:38.400 --> 00:00:42.466
+00:00:37.866 --> 00:00:42.133
 So the evidence points at Build, with 71 percent confidence.
 
-00:00:42.466 --> 00:00:46.133
+00:00:42.133 --> 00:00:45.966
 The loudest stage is not the stage that limits output.
 
-00:00:47.333 --> 00:00:49.466
+00:00:47.166 --> 00:00:49.100
 Suppose you trust that evidence.
 
-00:00:49.466 --> 00:00:53.266
+00:00:49.100 --> 00:00:52.533
 Every cycle, you add more agents and a delivery partner.
 
-00:00:53.266 --> 00:00:57.133
+00:00:52.533 --> 00:00:56.033
 Over four six-week cycles, accepted outcomes fall from 5.
 
-00:00:57.133 --> 00:00:57.600
+00:00:56.033 --> 00:00:56.466
 2 to 1.
 
-00:00:57.600 --> 00:00:58.333
+00:00:56.466 --> 00:00:57.133
 3 per week.
 
-00:00:58.333 --> 00:01:01.333
+00:00:57.133 --> 00:00:59.866
 Work in progress grows from 64 items to 148.
 
-00:01:01.333 --> 00:01:03.800
+00:00:59.866 --> 00:01:02.100
 More building made the system worse.
 
-00:01:05.000 --> 00:01:07.200
+00:01:03.300 --> 00:01:05.266
 Now spend at the real constraint.
 
-00:01:07.200 --> 00:01:10.933
+00:01:05.266 --> 00:01:08.600
 In cycle one, automate verification and limit new work.
 
-00:01:10.933 --> 00:01:12.200
+00:01:08.600 --> 00:01:09.733
 Output rises to 6.
 
-00:01:12.200 --> 00:01:15.266
+00:01:09.733 --> 00:01:12.466
 5 per week, and the constraint moves to Adopt.
 
-00:01:15.266 --> 00:01:18.800
+00:01:12.466 --> 00:01:15.600
 In cycle two, fund adoption and make handoffs clear.
 
-00:01:18.800 --> 00:01:20.666
+00:01:15.600 --> 00:01:17.266
 Output reaches 10 per week.
 
-00:01:20.666 --> 00:01:23.400
+00:01:17.266 --> 00:01:19.700
 And the constraint moves back to Verify.
 
-00:01:24.600 --> 00:01:27.066
+00:01:20.866 --> 00:01:23.200
 Then you repeat the plan that worked.
 
-00:01:27.066 --> 00:01:28.333
+00:01:23.200 --> 00:01:24.400
 Output falls to 4.
 
-00:01:28.333 --> 00:01:29.466
+00:01:24.400 --> 00:01:25.466
 2, and then to 3.
 
-00:01:29.466 --> 00:01:29.600
+00:01:25.466 --> 00:01:25.600
 7.
 
-00:01:29.600 --> 00:01:35.000
+00:01:25.600 --> 00:01:30.733
 The constraint moved, and the repeated limit on new work now starves the system.
 
-00:01:36.233 --> 00:01:37.633
+00:01:31.933 --> 00:01:33.166
 The constraint moves.
 
-00:01:37.633 --> 00:01:39.900
+00:01:33.166 --> 00:01:35.133
 Find it again after every change.
 
-00:01:39.900 --> 00:01:41.766
+00:01:35.133 --> 00:01:36.766
 Try it yourself in the lab.
