@@ -13,6 +13,11 @@ import {
 
 const root = document.querySelector("[data-simulator]");
 
+const explainer = document.querySelector("[data-explainer]");
+explainer?.addEventListener("play", () => {
+  window.leverageAnalytics?.track("explainer_played");
+}, { once: true });
+
 if (root) {
   let state = createScenario("agent-wave");
   let selected = new Set();

@@ -372,6 +372,40 @@ summary:focus-visible {
   margin: 0;
 }
 
+.explainer {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  width: min(calc(100% - 3rem), 1280px);
+  margin: 0 auto;
+  padding: 0 0 clamp(4rem, 8vw, 7rem);
+}
+
+.explainer h2 {
+  margin: 0.8rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.6vw, 3.1rem);
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.explainer__copy p:last-child {
+  margin: 1.2rem 0 0;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.explainer__video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--forest);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
 .lab-shell {
   padding: clamp(4rem, 8vw, 7rem) max(1.5rem, calc((100vw - var(--max)) / 2));
   color: var(--white);
@@ -1894,6 +1928,10 @@ body.drawer-open {
 }
 
 @media (max-width: 860px) {
+  .explainer {
+    grid-template-columns: 1fr;
+  }
+
   .hero {
     grid-template-columns: 1fr;
     padding-top: 5rem;

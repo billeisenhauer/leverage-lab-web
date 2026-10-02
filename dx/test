@@ -10,7 +10,7 @@ if [ ! -f ".env" ]; then
     "$SCRIPT_DIR/init"
 fi
 
-docker compose -f docker-compose.dev.yml run --rm web node --test tests/model.test.mjs
+docker compose -f docker-compose.dev.yml run --rm web node --test tests/model.test.mjs tests/story.test.mjs
 docker compose -f docker-compose.dev.yml run --rm web node --check assets/js/app.mjs
 docker compose -f docker-compose.dev.yml run --rm web node --check assets/js/analytics.mjs
 docker compose -f docker-compose.dev.yml run --rm web bundle exec jekyll build --strict_front_matter --destination /tmp/leverage-lab-site

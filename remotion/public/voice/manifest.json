@@ -1,0 +1,30 @@
+{
+  "hook": {
+    "hash": "4a49a18efdc5cc50",
+    "seconds": 12.538776
+  },
+  "constraint": {
+    "hash": "ff5414cc5b980bc8",
+    "seconds": 27.817506
+  },
+  "telemetry": {
+    "hash": "1d78ea277a9a4ec9",
+    "seconds": 21.640998
+  },
+  "naive": {
+    "hash": "bcb7e3d43ee1ef50",
+    "seconds": 14.907211
+  },
+  "moves": {
+    "hash": "dc65894973c9a509",
+    "seconds": 26.563628
+  },
+  "settle": {
+    "hash": "d6126d429e900a09",
+    "seconds": 17.786485
+  },
+  "close": {
+    "hash": "f6f327e766cc189f",
+    "seconds": 4.829751
+  }
+}

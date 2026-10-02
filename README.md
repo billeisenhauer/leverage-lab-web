@@ -41,7 +41,27 @@ simulator emits these custom events:
 | `guidance_mode_changed` | Easy or Hard mode was selected |
 | `help_opened` | The how-to-play guide was opened |
 | `hint_requested` | A contextual hint was requested |
+| `explainer_played` | The explainer video started playing (once per page view) |
 
 Event parameters contain model state such as scenario, cycle, intervention IDs,
 prediction, modeled constraint, outcome rate, and guidance mode. They do not
 contain free-form or intentionally identifying input.
+
+## Explainer video
+
+`remotion/` renders the explainer from the simulator itself: `remotion/src/story.mjs`
+plays the agent-wave scenario through `assets/js/model.mjs`, and the narration
+quotes those results. `tests/story.test.mjs` fails if a model change makes a
+narrated claim untrue. It runs on the host, not in the container, and needs Node and ffmpeg.
+
+```bash
+cd remotion
+npm install
+npm run studio   # preview
+npm run voice    # optional narration; needs ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID in .env
+npm run render   # master, site encodes, poster, captions → assets/videos/
+```
+
+Without narration the video renders silent, with burned-in captions paced at
+speaking speed. `npm run voice` lists your voices when no voice ID is set, and
+caches clips by text so re-runs only bill for changed scenes.
