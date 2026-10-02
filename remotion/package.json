@@ -1,0 +1,26 @@
+{
+  "name": "leverage-lab-videos",
+  "private": true,
+  "type": "module",
+  "description": "The Leverage Lab explainer, rendered with Remotion from the simulator's own model. Runs on the host (the site's container has no Node toolchain for Remotion). Encoding needs ffmpeg with libx264 and libsvtav1.",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "voice": "node voice.mjs",
+    "captions": "node captions.mjs",
+    "render": "npm run render:master && npm run render:encode && npm run render:poster && npm run captions",
+    "render:master": "remotion render src/index.ts explainer out/explainer.mp4 --codec=h264 --crf=8 --x264-preset=veryfast",
+    "render:encode": "node encode.mjs",
+    "render:poster": "remotion still src/index.ts explainer ../assets/videos/explainer-poster.jpg --frame=120 --image-format=jpeg --jpeg-quality=85"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.458",
+    "@remotion/google-fonts": "4.0.458",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.458"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "typescript": "5.9.3"
+  }
+}

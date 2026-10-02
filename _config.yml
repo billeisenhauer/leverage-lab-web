@@ -39,3 +39,4 @@ exclude:
   - .env
   - .env.example
   - .github
+  - remotion
