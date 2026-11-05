@@ -141,3 +141,12 @@ The source is small: [`factory.mjs`](https://github.com/billeisenhauer/leverage-
 - Proving that a test fails first: Gumloop, [Software Factory](https://www.gumloop.com/engineering/software-factory).
 - The cheapest check that gives real evidence: Paul Dix, [The Software Factory and the Inevitability of RSI Software](https://pauldix.com/the-software-factory-and-the-inevitability-of-rsi-software).
 - Consequence apart from the size of a change: Itamar Friedman, [Software Factory Engineer](https://x.com/itamar_mar/status/2118356299612033305).
+
+### From the author's novels
+
+Several of the lab's mechanics come from *The Factory Way*, the author's series of business novels about leading teams of people and agents. Each book has a free companion page with its tools and exhibits.
+
+- [*The Second Factory*](https://atomiclocomotive.com/factory/): the reviewer who becomes the constraint once agents triple the pull requests, which is *Lockdown*; warrants that set how far an agent may act alone, which are the dark rooms; and the batch approval nobody read to the end, which is the skimming.
+- [*Ten Factories*](https://atomiclocomotive.com/ten-factories/): proving the change before it ships, one of the book's five contracts between teams and agents, which the proof and holdout cards stand in for.
+- [*Relief Crew*](https://atomiclocomotive.com/relief-crew/): watching for a machine's rare mistake is hard work that fades, which the lab simplifies to skimming as the queue grows; and trusting each kind of work only as far as its record goes. The senior who reads everything and the junior who approves everything make the same mistake, which is why *Lockdown* and *Lights out* both lose.
+- [*The Dark Factory*](https://atomiclocomotive.com/dark-factory/): rooms that run dark where the work is fully known and stay lit where meaning lives; warrants with a date, lost on the first escaped defect, which is the lapse rule; slips written to be decided cold; the fire drill, which is the rebuild drill; and the March 1 double charge, which is *The silent charge* and why reconciling with the provider is its own check.

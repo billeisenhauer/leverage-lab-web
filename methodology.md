@@ -86,4 +86,6 @@ The source is intentionally small and inspectable. Change a capacity, yield, cov
 
 [Factory Lab]({{ '/factory/' | relative_url }}) has its own [model notes]({{ '/factory/method/' | relative_url }}). It zooms into this model's Build and Verify stages, where agents produce the work and someone has to decide which of it can merge unread.
 
+The opening scenario, *The agent output wave*, is the premise of the author's novel [*The Second Factory*](https://atomiclocomotive.com/factory/): a team gets agents, produces three times the pull requests, and nothing ships faster. It's the first book in *The Factory Way*, a series about leading teams of people and agents.
+
 The [project wiki](https://github.com/billeisenhauer/leverage-lab-web/wiki) extends these notes with a facilitator guide, reusable learning loop, and a generic human-agent delivery-system hypothesis.
