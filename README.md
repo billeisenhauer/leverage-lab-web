@@ -3,6 +3,15 @@
 A company-neutral, deterministic constraint simulator for human-agent software
 delivery systems.
 
+## Factory Lab
+
+`/factory/` is a companion simulator that zooms into Leverage Lab's Build and
+Verify stages. You choose which rooms of work merge without a person reading
+them, build checks, and see escaped defects surface weeks later. Its model is
+`assets/js/factory.mjs`, its page is `factory.html`, and its notes are
+`factory-method.md`. `tests/factory.test.mjs` covers the model's lessons and
+fails if a number quoted on the page or in the notes stops matching the model.
+
 ## Local development
 
 ```bash
@@ -42,6 +51,11 @@ simulator emits these custom events:
 | `help_opened` | The how-to-play guide was opened |
 | `hint_requested` | A contextual hint was requested |
 | `explainer_played` | The explainer video started playing (once per page view) |
+
+Factory Lab sends the same events. Its scenario IDs start with `factory-`, so
+reports can separate the two labs without a new dimension. In its `cycle_run`
+events, `modeled_constraint` holds the room of the costliest incident (or
+`none`) and `accepted_per_week` holds value shipped per week.
 
 Event parameters contain model state such as scenario, cycle, intervention IDs,
 prediction, modeled constraint, outcome rate, and guidance mode. They do not
