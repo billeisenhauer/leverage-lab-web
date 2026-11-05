@@ -84,4 +84,6 @@ A useful model should expose what would change its author’s mind. Leverage Lab
 
 The source is intentionally small and inspectable. Change a capacity, yield, coverage level, or intervention effect and rerun the same seed.
 
+[Factory Lab]({{ '/factory/' | relative_url }}) has its own [model notes]({{ '/factory/method/' | relative_url }}). It zooms into this model's Build and Verify stages, where agents produce the work and someone has to decide which of it can merge unread.
+
 The [project wiki](https://github.com/billeisenhauer/leverage-lab-web/wiki) extends these notes with a facilitator guide, reusable learning loop, and a generic human-agent delivery-system hypothesis.
