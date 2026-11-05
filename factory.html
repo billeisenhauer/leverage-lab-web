@@ -86,6 +86,12 @@ permalink: /factory/
         <p>You see defects the checks caught and incidents that have already reached customers. Escapes still in production don’t count yet, so the catch rate flatters the checks.</p>
       </div>
       <div class="factory-readout" data-readout aria-live="polite"></div>
+      <div class="hint-controls">
+        <button class="hint-button" type="button" data-hint-button>
+          <span aria-hidden="true">↳</span> Give me a hint
+        </button>
+        <div class="hint-card" data-hint-panel hidden aria-live="polite"></div>
+      </div>
       <dl class="metric-grid" data-metrics></dl>
     </section>
 
@@ -174,10 +180,34 @@ permalink: /factory/
         <li><span>5</span><div><strong>Read the debrief</strong><p>After four cycles, your decisions replay in 200 futures, against reading everything and reading nothing.</p></div></li>
       </ol>
 
+      <section class="help-glossary" aria-labelledby="factory-words-title">
+        <h3 id="factory-words-title">Words you’ll see</h3>
+        <dl class="signal-definitions">
+          <div><dt>Lit room</dt><dd>You read every change before it merges. Safer, but it costs your time, and a long queue makes you skim.</dd></div>
+          <div><dt>Dark room</dt><dd>Changes merge when the automated checks pass. You glance at a list afterward.</dd></div>
+          <div><dt>Unread code</dt><dd>Changes nobody read. The more a room has, the more often its later changes break, and the worse its incidents are.</dd></div>
+          <div><dt>Lapse rule</dt><dd>When a dark room causes an incident, it goes back to lit at once. You can make it dark again next cycle.</dd></div>
+          <div><dt>Defects still in production</dt><dd>Bugs that have merged but haven’t hurt anyone yet. They will. Only Easy mode and the debrief show them.</dd></div>
+          <div><dt>Futures</dt><dd>The same decisions replayed with different luck. One run can be lucky; 200 show the range.</dd></div>
+        </dl>
+      </section>
+
+      <section class="help-glossary" aria-labelledby="factory-labels-title">
+        <h3 id="factory-labels-title">Easy-mode labels</h3>
+        <dl class="signal-definitions">
+          <div><dt>Helpful / harmful</dt><dd>Over the rest of the run, value minus harm goes up or down.</dd></div>
+          <div><dt>Looks good now, costs later</dt><dd>The next six weeks improve, and the run ends worse. Watch for this one.</dd></div>
+          <div><dt>Pays on average, worse worst case</dt><dd>Usually a gain, but the unlucky futures get much worse.</dd></div>
+          <div><dt>Learning value</dt><dd>No protection, only knowledge. Measuring the checks is the example.</dd></div>
+        </dl>
+      </section>
+
       <div class="help-drawer__tip">
         <span>Reading tip</span>
-        <p>Ask two questions of each room: how well can the checks tell good work from bad, and how much does a mistake there cost?</p>
+        <p>Ask two questions of each room: how well can the checks tell good work from bad, and how much does a mistake there cost? Stuck? “Give me a hint” under the factory’s report goes from a general tip to what the model expects.</p>
       </div>
+
+      <p class="help-drawer__more">New to the idea? Read <a href="https://github.com/billeisenhauer/leverage-lab-web/wiki/Factory-Lab-in-Plain-English">Factory Lab in plain English</a>, or <a href="{{ '/factory/method/' | relative_url }}">inspect the model</a>.</p>
 
       <button class="button button--primary drawer-start" type="button" data-help-close>Start cycle 1</button>
     </aside>

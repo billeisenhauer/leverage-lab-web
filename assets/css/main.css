@@ -2677,3 +2677,28 @@ body.drawer-open {
   text-transform: uppercase;
   white-space: nowrap;
 }
+
+.help-glossary {
+  margin-top: 1.5rem;
+}
+
+.help-glossary h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.help-glossary .signal-definitions div {
+  grid-template-columns: 8.5rem 1fr;
+}
+
+.help-drawer__more {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  font-size: 0.73rem;
+}
+
+.help-drawer__more a {
+  color: var(--green-dark);
+}

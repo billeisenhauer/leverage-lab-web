@@ -10,6 +10,7 @@ import {
   createScenario,
   evaluateChange,
   formatDelta,
+  ladderCatch,
   leverageTranslation,
   measurementIsStale,
   planCost,
@@ -30,6 +31,7 @@ if (root) {
   let started = false;
   let helpReturnFocus = null;
   let guidance = new Map();
+  let hintLevel = 0;
   let guidanceToken = 0;
 
   const $ = (selector) => root.querySelector(selector);
@@ -56,6 +58,8 @@ if (root) {
     helpDrawer: $("[data-help-drawer]"),
     helpOpen: $("[data-help-open]"),
     helpClose: root.querySelectorAll("[data-help-close]"),
+    hintButton: $("[data-hint-button]"),
+    hintPanel: $("[data-hint-panel]"),
     modeButtons: root.querySelectorAll("[data-mode]"),
     modeSummary: $("[data-mode-summary]")
   };
@@ -169,6 +173,89 @@ if (root) {
         <span>${metric.note}</span>
       </div>
     `).join("");
+  }
+
+  // Hints: the first is general, the second points at evidence on the
+  // screen, the third says what the model expects.
+
+  function expectedLeak(room, owned) {
+    const unread = 1 + Math.min(1, room.unread / 120);
+    const leak = Object.entries(room.mix)
+      .reduce((sum, [kind, share]) => sum + share * (1 - ladderCatch(owned, kind)), 0);
+    return room.volume * room.defectRate * unread * leak * room.consequence;
+  }
+
+  function weakestKind(room, owned) {
+    return Object.entries(room.mix)
+      .map(([kind, share]) => ({ kind, share, rate: ladderCatch(owned, kind) }))
+      .sort((a, b) => b.share * (1 - b.rate) - a.share * (1 - a.rate))[0];
+  }
+
+  const CURES = { logic: "proof", contract: "holdout", silent: "reconcile", security: "review", supply: "cooldown" };
+
+  function hintsForNow() {
+    const owned = [...state.owned, ...buy];
+    const darkRooms = state.rooms.filter((room) => roomMode(room.id) === "dark");
+    const litRooms = state.rooms.filter((room) => roomMode(room.id) === "lit");
+    const readingHours = litRooms.reduce((sum, room) => sum + room.volume * room.reviewMinutes, 0)
+      * (owned.includes("slips") ? 0.7 : 1) / 60;
+    const budget = state.ownerMinutes / 60;
+    const riskiest = darkRooms
+      .map((room) => ({ room, leak: expectedLeak(room, owned) }))
+      .sort((a, b) => b.leak - a.leak)[0];
+
+    let evidence;
+    let reveal;
+    if (riskiest && riskiest.leak > 0.5) {
+      const weak = weakestKind(riskiest.room, owned);
+      evidence = `${riskiest.room.label} is dark. ${Math.round(weak.share * 100)}% of its defects are ${KINDS[weak.kind].label.toLowerCase()}s, and your checks catch ${Math.round(weak.rate * 100)}% of those. A mistake there costs ${riskiest.room.consequence}.`;
+      const cure = cardById(CURES[weak.kind]);
+      const cureNote = owned.includes(cure.id)
+        ? "The check that targets it is already in place, so the remaining lever is lighting the room."
+        : `“${cure.label}” is the check aimed at that kind of defect.`;
+      reveal = `The model expects about ${riskiest.leak.toFixed(1)} harm a week to escape from ${riskiest.room.label} with your current checks, more than any other dark room. Most of it won’t surface this cycle. ${cureNote}`;
+    } else if (!darkRooms.length) {
+      evidence = "Every room is lit, so nothing merges without you reading it.";
+      reveal = "With every room lit, the model’s risk is your time, not your checks. Low-consequence rooms with good checks are the cheapest to darken.";
+    } else {
+      evidence = "None of your dark rooms leaks much harm at your current checks.";
+      reveal = "The model sees little risk in your dark rooms. The open question is whether your lit rooms leave you enough time.";
+    }
+
+    if (readingHours > budget) {
+      const load = `Your lit rooms need about ${readingHours.toFixed(0)} hours of reading a week, against ${budget} you have. The queue will grow, and you’ll skim.`;
+      evidence = darkRooms.length ? `${load} ${evidence}` : `${evidence} ${load}`;
+      reveal = darkRooms.length
+        ? `${reveal} Your time is also short: low-consequence lit rooms cost reading without protecting much, and capping open changes or writing decidable-cold slips frees time.`
+        : `${reveal} Capping open changes or writing decidable-cold slips also frees time.`;
+    }
+
+    return [
+      {
+        label: "Reading hint",
+        text: "The catch rate the factory reports counts only incidents that have already surfaced, and most escapes take weeks. For each room, ask two things: can the checks tell good work from bad there, and what does a mistake cost?"
+      },
+      { label: "Evidence hint", text: evidence },
+      { label: "Model reveal", text: reveal }
+    ];
+  }
+
+  function renderHint() {
+    if (hintLevel === 0) {
+      elements.hintPanel.hidden = true;
+      elements.hintPanel.innerHTML = "";
+      elements.hintButton.disabled = complete();
+      elements.hintButton.innerHTML = '<span aria-hidden="true">↳</span> Give me a hint';
+      return;
+    }
+    const hints = hintsForNow();
+    const hint = hints[Math.min(hintLevel - 1, hints.length - 1)];
+    elements.hintPanel.hidden = false;
+    elements.hintPanel.innerHTML = `<span>${hint.label} · ${hintLevel} of ${hints.length}</span><p>${hint.text}</p>`;
+    elements.hintButton.innerHTML = hintLevel < hints.length
+      ? '<span aria-hidden="true">↳</span> Give me another hint'
+      : '<span aria-hidden="true">✓</span> Model view revealed';
+    elements.hintButton.disabled = hintLevel >= hints.length;
   }
 
   // 02 Rooms
@@ -574,6 +661,7 @@ if (root) {
   function planChanged() {
     clearNotice();
     renderStatus();
+    renderHint();
     scheduleGuidance();
     renderRooms();
     renderCards();
@@ -606,6 +694,7 @@ if (root) {
     rooms = {};
     lapse = state.lapseOnEscape;
     prediction = "";
+    hintLevel = 0;
     render();
     if (complete()) {
       track("simulation_completed", {
@@ -622,6 +711,7 @@ if (root) {
     rooms = {};
     lapse = state.lapseOnEscape;
     prediction = "";
+    hintLevel = 0;
     started = false;
     render();
   }
@@ -632,6 +722,7 @@ if (root) {
     renderMode();
     renderStatus();
     renderReadout();
+    renderHint();
     renderMetrics();
     scheduleGuidance();
     renderRooms();
@@ -647,6 +738,12 @@ if (root) {
   elements.helpOpen.addEventListener("click", openHelp);
   elements.helpClose.forEach((button) => button.addEventListener("click", closeHelp));
   elements.helpDrawer.addEventListener("keydown", trapHelpFocus);
+  elements.hintButton.addEventListener("click", () => {
+    markStarted("hint");
+    hintLevel = Math.min(3, hintLevel + 1);
+    track("hint_requested", { cycle: state.cycle, hint_level: hintLevel });
+    renderHint();
+  });
   elements.lapse.addEventListener("change", () => {
     markStarted("lapse");
     lapse = elements.lapse.checked;

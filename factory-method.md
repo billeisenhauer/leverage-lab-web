@@ -6,6 +6,8 @@ permalink: /factory/method/
 
 Factory Lab is a teaching model and a companion to [Leverage Lab]({{ '/' | relative_url }}). Leverage Lab treats agents as more build capacity and asks where the constraint moves. Factory Lab zooms into its Build and Verify stages and asks a narrower question: when agents build, which kinds of change can merge without a person reading them, and when would you find out you were wrong?
 
+New to the idea? [Factory Lab in plain English](https://github.com/billeisenhauer/leverage-lab-web/wiki/Factory-Lab-in-Plain-English) covers it without the numbers.
+
 The model makes one proposition inspectable: **escaped defects surface weeks after they merge, so a factory judged on what it can see is judged before the evidence exists.**
 
 ## Units
