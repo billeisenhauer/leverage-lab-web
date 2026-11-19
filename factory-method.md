@@ -141,6 +141,8 @@ The source is small: [`factory.mjs`](https://github.com/billeisenhauer/leverage-
 - Proving that a test fails first: Gumloop, [Software Factory](https://www.gumloop.com/engineering/software-factory).
 - The cheapest check that gives real evidence: Paul Dix, [The Software Factory and the Inevitability of RSI Software](https://pauldix.com/the-software-factory-and-the-inevitability-of-rsi-software).
 - Consequence apart from the size of a change: Itamar Friedman, [Software Factory Engineer](https://x.com/itamar_mar/status/2118356299612033305).
+- Why one person can't read everything: W. Ross Ashby's law of requisite variety, from *An Introduction to Cybernetics* (1956), which [Nate Berkopec](https://x.com/nateberkopec/status/2121351844039680301) applied to factories. A regulator can only hold outcomes steady if it can answer as many kinds of disturbance as it faces. The lab's two moves follow from it: cut what reaches you (dark rooms, the work cap) and extend what you can catch (the checks).
+- Questions that cost the owner's time: Calvin Grunewald, [A Look Inside the Factory](https://thebuildingmachine.com/p/a-look-inside-the-factory). His workers sent him 151 questions in about 21 hours until he limited what could reach him. That is what the *Decidable-cold slips* card stands in for.
 
 ### From the author's novels
 
